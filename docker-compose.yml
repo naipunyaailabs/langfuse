@@ -20,7 +20,7 @@ services:
       - 127.0.0.1:3030:3030
     environment: &langfuse-worker-env
       NEXTAUTH_URL: http://localhost:3000
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres # CHANGEME
+      DATABASE_URL: postgresql://postgres:postgres@orchestration-platform-postgres-3ogndf:5432/postgres # CHANGEME
       SALT: "mysalt" # CHANGEME
       ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000" # CHANGEME: generate via `openssl rand -hex 32`
       TELEMETRY_ENABLED: ${TELEMETRY_ENABLED:-true}
@@ -141,26 +141,9 @@ services:
       timeout: 10s
       retries: 10
 
-  postgres:
-    image: docker.io/postgres:${POSTGRES_VERSION:-latest}
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 3s
-      timeout: 3s
-      retries: 10
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres # CHANGEME
-      POSTGRES_DB: postgres
-    ports:
-      - 127.0.0.1:5432:5432
-    volumes:
-      - langfuse_postgres_data:/var/lib/postgresql/data
+ 
 
 volumes:
-  langfuse_postgres_data:
-    driver: local
   langfuse_clickhouse_data:
     driver: local
   langfuse_clickhouse_logs:
